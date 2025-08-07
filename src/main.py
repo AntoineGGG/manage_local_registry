@@ -34,12 +34,12 @@ class ImageManager:
             # Tag the image
             tag_command = ["podman", "tag", image_id, f"{self.local_registry}{repository}"]
             subprocess.run(tag_command, check=True)
-            print(f"Successfully tagged {image_id} as {self.local_registry}")
+            print(f"Successfully tagged {image_id} as {self.local_registry}{repository}")
 
             # Push the image to the local registry
-            push_command = ["podman", "push", self.local_registry]
+            push_command = ["podman", "push", f"{self.local_registry}{repository}"]
             subprocess.run(push_command, check=True)
-            print(f"Successfully pushed {self.local_registry}")
+            print(f"Successfully pushed {self.local_registry}{repository}")
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")

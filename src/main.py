@@ -19,7 +19,7 @@ class ImageManager:
 
             repository = artifact.split("/")[1:]
 
-            print(f"Split repository {repository}")
+            print(f"Split repository {"/".join(repository)}")
 
             # Pull the image
             pull_command = ["podman", "pull", artifact]

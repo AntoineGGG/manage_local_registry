@@ -17,6 +17,10 @@ class ImageManager:
             # Ask the user for the image to pull
             artifact = input("Enter the image to pull (e.g., quay.io/thanos/thanos:v1.03): ")
 
+            repository = artifact.split("/")[1:]
+
+            print(f"Split repository {repository}")
+
             # Pull the image
             pull_command = ["podman", "pull", artifact]
             subprocess.run(pull_command, check=True)

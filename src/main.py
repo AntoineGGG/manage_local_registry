@@ -48,7 +48,7 @@ class ImageManager:
             sys.exit(1)
 
     def podman_login(self):
-        check_login_command =  subprocess.run(["pdoman","login", "--get-login"], check=True)
+        check_login_command =  subprocess.run(["podman","login", "--get-login"], check=True)
 
         if "Error" in check_login_command:
             try:

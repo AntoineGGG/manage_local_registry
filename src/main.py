@@ -8,11 +8,13 @@ load_dotenv()
 
 class ImageManager:
     def __init__(self):
-        self.local_registry = os.getenv("local_registry")
+        self.local_image_repository = os.getenv("local_image_repository")
+        self.local_repository = os.getenv("local_registry")
         os.environ["HTTPS_PROXY"] = os.getenv("https_proxy")
         os.environ["NO_PROXY"] = os.getenv("NO_PROXY")
 
     def pull_tag_push_image(self):
+        self.podman_login()
         try:
             # Ask the user for the image to pull
             artifact = input("Enter the image to pull (e.g., quay.io/thanos/thanos:v1.03): ")
@@ -32,19 +34,32 @@ class ImageManager:
             print(f"Image ID: {image_id}")
 
             # Tag the image
-            tag_command = ["podman", "tag", image_id, f"{self.local_registry}{repository}"]
+            tag_command = ["podman", "tag", image_id, f"{self.local_image_repository}{repository}"]
             subprocess.run(tag_command, check=True)
-            print(f"Successfully tagged {image_id} as {self.local_registry}{repository}")
+            print(f"Successfully tagged {image_id} as {self.local_image_repository}{repository}")
 
             # Push the image to the local registry
-            push_command = ["podman", "push", f"{self.local_registry}{repository}"]
+            push_command = ["podman", "push", f"{self.local_image_repository}{repository}"]
             subprocess.run(push_command, check=True)
-            print(f"Successfully pushed {self.local_registry}{repository}")
+            print(f"Successfully pushed {self.local_image_repository}{repository}")
 
         except subprocess.CalledProcessError as e:
             print(f"An error occurred: {e}")
             sys.exit(1)
 
+    def podman_login(self):
+        check_login_command =  subprocess.run(["pdoman","login", "--get-login"], check=True)
+
+        if "Error" in check_login_command:
+            try:
+                login_command = ["podman", "login", self.local_registry]
+                subprocess.run(login_command, check=True)
+                print("Successfully logged in to the local registry")
+            except subprocess.CalledProcessError as e:
+                print(f"An error occurred: {e}")
+                sys.exit(1)
+        else:
+            print("Already logged to the registry")
 
 if __name__ == "__main__":
     imageManager = ImageManager()

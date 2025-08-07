@@ -14,7 +14,6 @@ class ImageManager:
         os.environ["NO_PROXY"] = os.getenv("NO_PROXY")
 
     def pull_tag_push_image(self):
-        self.podman_login()
         try:
             # Ask the user for the image to pull
             artifact = input("Enter the image to pull (e.g., quay.io/thanos/thanos:v1.03): ")
@@ -47,20 +46,7 @@ class ImageManager:
             print(f"An error occurred: {e}")
             sys.exit(1)
 
-    def podman_login(self):
-        login_command = ["podman","login", "--get-login"]
-        check_login_command =  subprocess.check_output(login_command, text=True)
 
-        if "Error" in check_login_command:
-            try:
-                login_command = ["podman", "login", self.local_registry]
-                subprocess.run(login_command, check=True)
-                print("Successfully logged in to the local registry")
-            except subprocess.CalledProcessError as e:
-                print(f"An error occurred: {e}")
-                sys.exit(1)
-        else:
-            print("Already logged to the registry")
 
 if __name__ == "__main__":
     imageManager = ImageManager()

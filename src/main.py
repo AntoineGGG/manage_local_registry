@@ -17,9 +17,9 @@ class ImageManager:
             # Ask the user for the image to pull
             artifact = input("Enter the image to pull (e.g., quay.io/thanos/thanos:v1.03): ")
 
-            repository = artifact.split("/")[1:]
+            repository = '/'.join(artifact.split("/")[1:])
 
-            print(f"Split repository {"/".join(repository)}")
+            print(f"Split repository {'/'.join(repository)}")
 
             # Pull the image
             pull_command = ["podman", "pull", artifact]
@@ -32,7 +32,7 @@ class ImageManager:
             print(f"Image ID: {image_id}")
 
             # Tag the image
-            tag_command = ["podman", "tag", image_id, self.local_registry]
+            tag_command = ["podman", "tag", image_id, self.local_registry, ]
             subprocess.run(tag_command, check=True)
             print(f"Successfully tagged {image_id} as {self.local_registry}")
 

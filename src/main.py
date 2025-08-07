@@ -32,7 +32,7 @@ class ImageManager:
             print(f"Image ID: {image_id}")
 
             # Tag the image
-            tag_command = ["podman", "tag", image_id, self.local_registry, repository]
+            tag_command = ["podman", "tag", image_id, f"{self.local_registry}{repository}"]
             subprocess.run(tag_command, check=True)
             print(f"Successfully tagged {image_id} as {self.local_registry}")
 
